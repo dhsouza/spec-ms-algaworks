@@ -1,4 +1,4 @@
-package com.algaworks.algasensors.device.management.api.config.jackson.jpa;
+package com.algaworks.algasensors.device.management.api.config.jpa;
 
 import io.hypersistence.tsid.TSID;
 import jakarta.persistence.AttributeConverter;
