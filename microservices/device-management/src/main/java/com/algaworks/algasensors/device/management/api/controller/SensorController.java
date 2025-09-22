@@ -8,9 +8,14 @@ import com.algaworks.algasensors.device.management.domain.model.SensorId;
 import com.algaworks.algasensors.device.management.domain.repository.SensorRepository;
 import io.hypersistence.tsid.TSID;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/sensors")
@@ -19,6 +24,11 @@ public class SensorController {
 
     private final SensorRepository sensorRepository;
 
+    @GetMapping
+    public Page<SensorOutput> getOne(@PageableDefault Pageable pageable) {
+        Page<Sensor> sensors = sensorRepository.findAll(pageable);
+        return sensors.map(this::convertToModel);
+    }
 
     @GetMapping("/{sensorId}")
     public SensorOutput getOne(@PathVariable TSID sensorId) {
@@ -43,6 +53,32 @@ public class SensorController {
         sensor = sensorRepository.saveAndFlush(sensor);
 
         return convertToModel(sensor);
+    }
+
+    @PutMapping("/{sensorId}")
+    @ResponseStatus(HttpStatus.OK)
+    public SensorOutput update(@RequestBody SensorInput sensorInput, @PathVariable TSID sensorId) {
+        Sensor sensor = sensorRepository.findById(new SensorId(sensorId))
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+
+        sensor.setName(sensorInput.getName());
+        sensor.setLocation(sensorInput.getLocation());
+        sensor.setIp(sensorInput.getIp());
+        sensor.setModel(sensorInput.getModel());
+        sensor.setProtocol(sensorInput.getProtocol());
+
+        sensor = sensorRepository.save(sensor);
+
+        return convertToModel(sensor);
+    }
+
+    @DeleteMapping("/{sensorId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable TSID sensorId) {
+        Sensor sensor = sensorRepository.findById(new SensorId(sensorId))
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+
+        sensorRepository.delete(sensor);
     }
 
     private SensorOutput convertToModel(Sensor sensor) {
