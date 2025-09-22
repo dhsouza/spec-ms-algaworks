@@ -8,6 +8,9 @@ import io.hypersistence.tsid.TSID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
+
+import java.time.Duration;
 
 @RestController
 @RequestMapping("/api/sensors/{sensorId}/monitoring")
@@ -28,6 +31,10 @@ public class SensorMonitoringController {
     public void enable(@PathVariable TSID sensorId) {
         SensorMonitoring sensor = findByIdOrDefault(sensorId);
 
+        if (sensor.getEnabled()) {
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY);
+        }
+
         sensor.setEnabled(true);
 
         sensorMonitoringRepository.saveAndFlush(sensor);
@@ -35,8 +42,12 @@ public class SensorMonitoringController {
 
     @DeleteMapping("/enable")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void disable(@PathVariable TSID sensorId) {
+    public void disable(@PathVariable TSID sensorId) throws InterruptedException {
         SensorMonitoring sensor = findByIdOrDefault(sensorId);
+
+        if (!sensor.getEnabled()) {
+            Thread.sleep(Duration.ofSeconds(10));
+        }
 
         sensor.setEnabled(false);
 
