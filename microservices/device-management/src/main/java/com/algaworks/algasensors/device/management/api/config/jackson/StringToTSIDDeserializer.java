@@ -1,4 +1,4 @@
-package com.algaworks.algasensors.device.management.api.config.web;
+package com.algaworks.algasensors.device.management.api.config.jackson;
 
 import com.fasterxml.jackson.core.JacksonException;
 import com.fasterxml.jackson.core.JsonParser;
