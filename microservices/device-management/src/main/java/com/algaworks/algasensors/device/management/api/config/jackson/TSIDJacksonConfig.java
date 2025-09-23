@@ -1,5 +1,6 @@
 package com.algaworks.algasensors.device.management.api.config.jackson;
 
+import com.algaworks.algasensors.device.management.api.config.web.StringToTSIDDeserializer;
 import com.fasterxml.jackson.databind.Module;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import io.hypersistence.tsid.TSID;
@@ -13,6 +14,7 @@ public class TSIDJacksonConfig {
     public Module tsidModule() {
         SimpleModule module = new SimpleModule();
         module.addSerializer(TSID.class, new TSIDToStringSerializer());
+        module.addDeserializer(TSID.class, new StringToTSIDDeserializer());
 
         return module;
     }

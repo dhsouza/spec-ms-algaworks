@@ -10,8 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.time.Duration;
-
 @RestController
 @RequestMapping("/api/sensors/{sensorId}/monitoring")
 @RequiredArgsConstructor
@@ -42,12 +40,8 @@ public class SensorMonitoringController {
 
     @DeleteMapping("/enable")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void disable(@PathVariable TSID sensorId) throws InterruptedException {
+    public void disable(@PathVariable TSID sensorId) {
         SensorMonitoring sensor = findByIdOrDefault(sensorId);
-
-        if (!sensor.getEnabled()) {
-            Thread.sleep(Duration.ofSeconds(10));
-        }
 
         sensor.setEnabled(false);
 
