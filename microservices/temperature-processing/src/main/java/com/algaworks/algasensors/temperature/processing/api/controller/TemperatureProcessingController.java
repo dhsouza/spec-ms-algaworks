@@ -5,6 +5,7 @@ import com.algaworks.algasensors.temperature.processing.domain.model.Temperature
 import io.hypersistence.tsid.TSID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -12,12 +13,15 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.time.OffsetDateTime;
 
+import static com.algaworks.algasensors.temperature.processing.rabbitmq.RabbitMQConfig.TEMPERATURE_PROCESSING_TEMPERATURE_RECEIVED_V_1_E;
+
 @RestController
 @RequestMapping("/api/sensors/{sensorId}/temperatures/data")
 @RequiredArgsConstructor
 @Slf4j
 public class TemperatureProcessingController {
 
+    private final RabbitTemplate rabbitTemplate;
 
     @PostMapping(consumes = MediaType.TEXT_PLAIN_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
@@ -43,5 +47,10 @@ public class TemperatureProcessingController {
 
         log.info(temperatureLogOutput.toString());
 
+        String exchange = TEMPERATURE_PROCESSING_TEMPERATURE_RECEIVED_V_1_E;
+        String routingKey = "";
+        Object payload = temperatureLogOutput;
+
+        rabbitTemplate.convertAndSend(exchange, routingKey, payload);
     }
 }
