@@ -1,7 +1,0 @@
-[submodule "algashop/microservices/algashop-ordering"]
-	path = algashop/microservices/algashop-ordering
-	url = https://github.com/dhsouza/algashop-ordering.git
-
-[submodule "algashop/docs"]
-	path = algashop/docs
-	url = https://github.com/dhsouza/algashop-docs.git
