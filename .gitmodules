@@ -1,5 +1,5 @@
 [submodule "ems2/microservices/algashop-ordering"]
-	path = ems2/microservices/algashop-ordering
+	path = algashop/microservices/algashop-ordering
 	url = https://github.com/dhsouza/algashop-ordering.git
 [submodule "ems2/microservices/algashop-docs"]
 	path = ems2/microservices/algashop-docs
