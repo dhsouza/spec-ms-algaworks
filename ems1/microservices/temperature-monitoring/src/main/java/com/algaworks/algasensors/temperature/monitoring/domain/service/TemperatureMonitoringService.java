@@ -29,8 +29,10 @@ public class TemperatureMonitoringService {
             throw new RuntimeException("Temperature 10.5");
         }
         sensorMonitoringRepository.findById(new SensorId(temperatureLogData.getSensorId()))
-                .ifPresentOrElse(sensor -> handleSensorMonitoring(temperatureLogData, sensor),
-                        () -> logIgnoredTemperature(temperatureLogData));
+                .ifPresentOrElse(sensor ->
+                                handleSensorMonitoring(temperatureLogData, sensor),
+                        () -> logIgnoredTemperature(temperatureLogData)
+                );
     }
 
     private void logIgnoredTemperature(TemperatureLogData temperatureLogData) {

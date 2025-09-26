@@ -14,7 +14,7 @@ import java.util.Objects;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class SensorId implements Serializable {
 
-    public static final String TSID_CANNOT_BE_NULL = "TSID cannot be null";
+    private static final String TSID_CANNOT_BE_NULL = "TSID cannot be null";
     private TSID value;
 
     public SensorId(TSID value) {
